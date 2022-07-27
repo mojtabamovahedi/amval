@@ -10,7 +10,6 @@ class APISplash{
     Dio dio = Dio();
     final prefs = await SharedPreferences.getInstance();
     final refreshToken = prefs.getString("refresh");
-
     try{
       Response response = await dio.post(
         '$baseUrl/auth/login/refresh/',
@@ -20,7 +19,7 @@ class APISplash{
         options: Options(
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}),
       );
-      return response.data['refresh'];
+      return response.data['access'];
     }on DioError catch(e){
       throw(HandleError(e).getMessage());
     }

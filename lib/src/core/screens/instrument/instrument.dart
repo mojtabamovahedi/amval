@@ -1,4 +1,5 @@
 
+import 'package:amval/src/config/storage/constants.dart';
 import 'package:amval/src/presentation/logic/cubit/assignment/assignment_cubit.dart';
 import 'package:amval/src/presentation/logic/cubit/instrument/instrument_cubit.dart';
 import 'package:amval/src/presentation/widget/instrument_card.dart';
@@ -83,7 +84,7 @@ class _InstrumentState extends State<Instrument> {
                 BlocBuilder<InstrumentCubit, InstrumentState>(
                   builder: (context, state) {
                     if (state is InstrumentLoaded){
-                      return Text('   تعداد ابزار یافت شده: ${state.instruments.length} ');
+                      return Text('   تعداد ابزار یافت شده: ${replaceFarsiNumber(state.instruments.length.toString())} ');
                     }
                     return const Text('تعداد ابزار یافت شده:...  ');
                   },

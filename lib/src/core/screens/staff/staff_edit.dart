@@ -1,24 +1,27 @@
-
 import 'package:amval/src/config/storage/constants.dart';
-import 'package:amval/src/presentation/logic/cubit/staff/add_staff_cubit.dart';
+import 'package:amval/src/data/model/staff_response.dart';
+import 'package:amval/src/presentation/logic/cubit/staff/edit_staff_cubit.dart';
+import 'package:amval/src/presentation/logic/cubit/staff/staff_cubit.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class AddStaff extends StatefulWidget {
-  const AddStaff({Key? key}) : super(key: key);
+class StaffEdit extends StatefulWidget {
+  StaffResponse staff;
+  StaffEdit({required this.staff, Key? key}) : super(key: key);
 
   @override
-  _AddStaffState createState() => _AddStaffState();
+  State<StaffEdit> createState() => _StaffEditState();
 }
 
-class _AddStaffState extends State<AddStaff> {
+class _StaffEditState extends State<StaffEdit> {
 
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _nationalIDController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
+  late final _firstNameController;
+  late final _lastNameController;
+  late final _nationalIDController;
+  late final _userNameController;
 
   final _formKey = GlobalKey<FormState>();
   final double heightSpace = 17.0;
@@ -26,27 +29,38 @@ class _AddStaffState extends State<AddStaff> {
 
   @override
   void dispose() {
-    _phoneNumberController.dispose();
+    _nationalIDController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _nationalIDController.dispose();
+    _userNameController.dispose();
     super.dispose();
   }
 
   @override
+  void initState() {
+    _firstNameController = TextEditingController(text: widget.staff.firstName.toString());
+    _lastNameController = TextEditingController(text: widget.staff.lastName.toString());
+    _nationalIDController = TextEditingController(text: widget.staff.nationalId.toString());
+    _userNameController = TextEditingController(text: widget.staff.username.toString());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocListener<AddStaffCubit, AddStaffState>(
+    return BlocListener<EditStaffCubit, EditStaffState>(
   listener: (context, state) {
-    if (state is AddStaffSuccess){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message),duration: durationForSuccessMessage));
+    if (state is EditStaffFault){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
     }
-    if (state is AddStaffFailure){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message),duration: durationForErrorMessage));
+    if (state is EditStaffSuccess){
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("با موفقیت ویرایش شد.")));
+      BlocProvider.of<StaffCubit>(context).getList();
+      Navigator.pop(context);
     }
   },
   child: Scaffold(
       appBar: AppBar(
-        title: const Text("افزودن کارمند"),
+        title: const Text("ویرایش کارمند"),
         centerTitle: true,
       ),
       body: Form(
@@ -58,8 +72,6 @@ class _AddStaffState extends State<AddStaff> {
               child: Column(
                 children: [
                   SizedBox(height: heightSpace,),
-
-                  // first name of new staff
                   TextFormField(
                     controller: _firstNameController,
                     textAlign: TextAlign.right,
@@ -123,65 +135,64 @@ class _AddStaffState extends State<AddStaff> {
                   ),
                   SizedBox(height: heightSpace,),
 
-                  // phone number of new staff
                   TextFormField(
-                    controller: _phoneNumberController,
+                    controller: _userNameController,
                     textAlign: TextAlign.right,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      label: Text('شماره تماس'),
-                      hintText: "شماره تماس را وارد کنید",
+                      label: Text('نام کاربری'),
+                      hintText: "نام کاربری را وارد کنید",
                       hintStyle: TextStyle(fontSize: 12.0),
                       fillColor: fieldColor, filled: true,
                       contentPadding: EdgeInsets.symmetric(horizontal: 20),
                     ),
                     validator: (text) {
                       if (text!.isEmpty){
-                        return "شماره تماس نباید خالی باشد";
+                        return "نام کاربری نباید خالی باشد";
                       }return null;
                     },
                   ),
                   const SizedBox(height: 35,),
 
-                    Container(
-                      width: 120,
-                      height: 50,
-                      color: buttonColor,
-                      child: BlocBuilder<AddStaffCubit, AddStaffState>(
-                        builder: (context, state) {
-                          return state is AddStaffLoading
-                              ? Center(
-                                  child: LoadingAnimationWidget.waveDots(
-                                      color: Colors.white, size: 25.0),
-                                )
-                              : TextButton(
-                                  child: const Text(
-                                    "ثبت",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onPressed: () {
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                    if (_formKey.currentState!.validate()) {
-                                      context.read<AddStaffCubit>().addStaff(
-                                          _firstNameController.text,
-                                          _lastNameController.text,
-                                          double.parse(_nationalIDController.text),
-                                          _phoneNumberController.text);
-                                    }
-                                  },
-                                );
-                        },
-                      ),
+                  Container(
+                    width: 120,
+                    height: 50,
+                    color: buttonColor,
+                    child: BlocBuilder<EditStaffCubit, EditStaffState>(
+                      builder: (context, state) {
+                        return state is EditStaffLoading
+                            ? Center(
+                          child: LoadingAnimationWidget.waveDots(
+                              color: Colors.white, size: 25.0),
+                        )
+                            : TextButton(
+                          child: const Text(
+                            "ثبت",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            if (_formKey.currentState!.validate()) {
+                              FormData data = FormData.fromMap({
+                                "username":_userNameController.text,
+                                "password":widget.staff.password,
+                                "first_name":_firstNameController.text,
+                                "last_name":_lastNameController.text,
+                                "national_id":_nationalIDController.text,
+                                "company":1,
+                              });
+                              context.read<EditStaffCubit>().editStaff(data, widget.staff.id!.toInt());
+                            }
+                          },
+                        );
+                      },
                     ),
-                  ],
+                  ),
+                ],
               ),
             ),
           ),
-        ),
+        )
       ),
     ),
 );

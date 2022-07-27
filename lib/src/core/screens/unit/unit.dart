@@ -1,3 +1,4 @@
+import 'package:amval/src/config/storage/constants.dart';
 import 'package:amval/src/core/screens/unit/dialoges/add_unit.dart';
 import 'package:amval/src/presentation/logic/cubit/unit/unit_cubit.dart';
 import 'package:amval/src/presentation/widget/unit_card.dart';
@@ -79,7 +80,7 @@ class _UnitState extends State<Unit> {
             BlocBuilder<UnitCubit, UnitState>(
               builder: (context, state) {
                 if (state is UnitLoaded){
-                  return Text('   تعداد واحد یافت شده: ${state.unitResponse.length} ');
+                  return Text('   تعداد واحد یافت شده: ${replaceFarsiNumber(state.unitResponse.length.toString())} ');
                 }
                 return const Text('   تعداد واحد یافت شده:...');
               },

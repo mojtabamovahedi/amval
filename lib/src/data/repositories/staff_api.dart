@@ -89,4 +89,36 @@ class APIStaff {
       throw(HandleError(e).getMessage());
     }
   }
+  
+  Future<void> editStaff(FormData data, int id) async{
+    Dio dio = Dio();
+    try{
+      await dio.put(
+          "$baseUrl/api/v1/staff/$id",
+          data: data,
+        options: Options(
+            headers: {
+              'Authorization' : "Bearer $ACCESS_TOKEN",
+              'Content-Type' : "application/x-www-form-urlencoded",
+            })
+      );
+    }on DioError catch(e){
+      throw('$e');
+    }
+  }
+  
+  Future<void> deleteStaff(int id)async {
+    Dio dio = Dio();
+    try{
+      await dio.delete(
+          "$baseUrl/api/v1/staff/$id",
+          options: Options(
+              headers: {
+                'Authorization' : "Bearer $ACCESS_TOKEN",
+              })
+      );
+    }on DioError catch(e){
+      throw('$e');
+    }
+  }
 }

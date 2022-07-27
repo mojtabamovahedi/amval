@@ -109,7 +109,7 @@ class _InstrumentProfileState extends State<InstrumentProfile> {
                             },
                             errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) => Container(
                                   height: 100.0,
-                                  color: Color.fromRGBO(243, 243, 243, 1),
+                                  color: const Color.fromRGBO(243, 243, 243, 1),
                                   child: Center(
                                     child: Column(
                                       mainAxisAlignment:

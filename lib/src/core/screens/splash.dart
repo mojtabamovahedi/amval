@@ -32,11 +32,18 @@ class _SplashState extends State<Splash> {
                   return const Text("متصل به اینترنت");
                 }
                 if(state is SplashInternetCheckFault){
-                  return TextButton(
-                      onPressed: () {
-                        context.read<SplashCubit>().checkInternet();
-                      },
-                      child: const Text("تلاش مجدد")
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("خطا در اتصال به اینترنت"),
+                      const SizedBox(height: 2.5,),
+                      TextButton(
+                          onPressed: () {
+                            context.read<SplashCubit>().checkInternet();
+                          },
+                          child: const Text("تلاش مجدد"),
+                      ),
+                    ],
                   );
                 }
                 if(state is SplashCheckAccessToken){

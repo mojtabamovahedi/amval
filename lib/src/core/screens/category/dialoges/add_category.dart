@@ -121,7 +121,17 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                 return state is CreateCategoryLoading
                     ? const Center(child: CircularProgressIndicator())
                     : Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    TextButton(
+                        onPressed: (){
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          _nameController.clear();
+                          _parentController.clear();
+                          Navigator.pop(context);
+                        },
+                        child: const Text("خروج")
+                    ),
                     TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -132,15 +142,6 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                           }
                         },
                         child: const Text("ثبت")),
-                    TextButton(
-                        onPressed: (){
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          _nameController.clear();
-                          _parentController.clear();
-                          Navigator.pop(context);
-                        },
-                        child: const Text("خروج")
-                    )
                   ],
                 );
               },

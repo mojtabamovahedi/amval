@@ -14,8 +14,18 @@ class CategoryCubit extends Cubit<CategoryState> {
   Future<void> getAllList() async {
     emit(CategoryLoading());
     try{
-      List<CategoryResponse> groupNames = await repository.getCategoriesList();
+      List<CategoryResponse> groupNames = await repository.getAllCategories();
       emit(CategoryLoaded(categories: groupNames));
+    }catch(e){
+      emit(CategoryFault());
+    }
+  }
+
+  Future<void> getCategories(int? id)async {
+    emit(CategoryLoading());
+    try{
+      List<CategoryResponse> categories = await repository.getCategories(id);
+      emit(CategoryLoaded(categories: categories));
     }catch(e){
       emit(CategoryFault());
     }

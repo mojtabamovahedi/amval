@@ -14,7 +14,7 @@ class SetCategoryAddInstrumentCubit extends Cubit<SetCategoryAddInstrumentState>
     List<CategoryResponse> categories = [];
     emit(SetCategoryAddInstrumentLoading());
     try{
-      categories = await repository.getCategoriesList();
+      categories = await repository.getAllCategories();
       emit(SetCategoryAddInstrumentLoaded(categories: categories, category: categories.first));
     }catch (e){
       emit(SetCategoryAddInstrumentFault(message: e.toString()));

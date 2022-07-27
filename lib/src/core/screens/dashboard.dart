@@ -7,6 +7,8 @@ import 'package:amval/src/presentation/widget/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'category/category.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
 
@@ -44,7 +46,8 @@ class _DashboardState extends State<Dashboard> {
                   label: "دسته‌بندی‌ها",
                   onTap: () {
                     Navigator.pushNamed(context, "/category");
-                    context.read<CategoryCubit>().getAllList();
+                    address = "/";
+                    context.read<CategoryCubit>().getCategories(null);
                   },
                 ),
               ],

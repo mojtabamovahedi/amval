@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 
 class APICategory{
 
-  Future<List<CategoryResponse>> getCategoriesList() async {
+  Future<List<CategoryResponse>> getAllCategories() async {
     List<CategoryResponse> categoriesResponse = [];
     Dio dio = Dio();
     try{
@@ -18,6 +18,30 @@ class APICategory{
         return CategoryResponse.fromJson(data);
       }).toList();
       return categoriesResponse;
+    }on DioError catch(e){
+      throw(HandleError(e).getMessage());
+    }
+  }
+
+  Future<List<CategoryResponse>> getCategories(int? id) async {
+    List<CategoryResponse> categories = [];
+    Dio dio = Dio();
+    String path = "$baseUrl/api/v1/category/" ;
+
+    if (id != null){
+      path = path + "$id";
+    }
+
+    try{
+      Response response = await dio.get(
+          path,
+          options: Options(headers: {'Authorization' : 'Bearer $ACCESS_TOKEN'}),
+      );
+      categories = (response.data as List).map((data){
+        return CategoryResponse.fromJson(data);
+      }).toList();
+
+      return categories;
     }on DioError catch(e){
       throw(HandleError(e).getMessage());
     }

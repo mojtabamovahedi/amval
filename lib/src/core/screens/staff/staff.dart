@@ -1,5 +1,7 @@
 
 import 'package:amval/src/config/storage/constants.dart';
+import 'package:amval/src/core/screens/staff/dialogs/delete_staff_dialog.dart';
+import 'package:amval/src/presentation/logic/cubit/assignment/is_expanded_cubit.dart';
 import 'package:amval/src/presentation/logic/cubit/staff/staff_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,15 +108,66 @@ class _StaffState extends State<Staff> {
                             child: ListView.separated(
                               itemCount: state.staffs.length,
                               itemBuilder: (context, index){
-                                return Card(
-                                  color: const Color.fromRGBO(223, 223, 245, 1),
-                                  child: ListTile(
-                                    title: Text("${state.staffs[index].id.toString()}) ${state.staffs[index].firstName} ${state.staffs[index].lastName}"),
-                                    subtitle: Text("کد ملی: ${state.staffs[index].nationalId}"),
+                                final staff = state.staffs[index];
+                                return BlocProvider(
+                                  create: (context) => IsExpandedCubit(),
+                                  child: BlocBuilder<IsExpandedCubit, bool>(
+                                    builder: (context, state){
+                                      return ExpansionPanelList(
+                                        animationDuration: const Duration(milliseconds: 600),
+                                        children: [
+                                          ExpansionPanel(
+                                              headerBuilder: (BuildContext context, bool isExpanded){
+                                                return ListTile(
+                                                  title: Text("${staff.firstName} ${staff.lastName}"),
+                                                  subtitle: Text("شناسه کارمند: ${replaceFarsiNumber(staff.id.toString())}"),
+                                                );
+                                              },
+                                              body: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  Column(
+                                                    children: [
+                                                      Text("نام کاربری: ${staff.username}"),
+                                                      const SizedBox(height: 3.5,),
+                                                      Text("کد ملی: ${staff.nationalId}"),
+                                                    ],
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      IconButton(
+                                                          onPressed: (){
+                                                            Navigator.pushNamed(context, "/staff_edit", arguments: staff);
+                                                          },
+                                                          icon: const Icon(Icons.edit)
+                                                      ),
+                                                      IconButton(
+                                                          onPressed: (){
+                                                            showDialog(context: context, builder: (BuildContext context) => DeleteStaffDialog(staff: staff));
+                                                          },
+                                                          icon: const Icon(Icons.delete)
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            isExpanded: state,
+                                            backgroundColor:  const Color.fromRGBO(223, 223, 245, 1),
+                                            canTapOnHeader: true,
+                                            
+                                          ),
+                                        ],
+                                        expansionCallback: (panelIndex, isExpanded) {
+                                          context.read<IsExpandedCubit>().changeExpanded(!state);
+                                        },
+                                      );
+                                    },
                                   ),
                                 );
                               },
-                              separatorBuilder: (context, input) => const SizedBox(height: 3.5,),
+                              separatorBuilder: (context, input) => const SizedBox(height: 5,),
                             ),
                           ),
                         );

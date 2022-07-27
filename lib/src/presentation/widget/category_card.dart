@@ -1,9 +1,12 @@
 
 import 'package:amval/src/config/storage/constants.dart';
+import 'package:amval/src/core/screens/category/category.dart';
 import 'package:amval/src/core/screens/category/dialoges/delete_category.dart';
 import 'package:amval/src/core/screens/category/dialoges/edit_category.dart';
 import 'package:amval/src/data/model/category_response.dart';
+import 'package:amval/src/presentation/logic/cubit/category/category_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CategoryCard extends StatefulWidget {
   CategoryResponse category;
@@ -22,14 +25,7 @@ class _CategoryCardState extends State<CategoryCard> {
       height: 55,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2),
-        color: Colors.blueGrey[300],
-          gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromRGBO(242, 242, 251, 1),
-                Color.fromRGBO(223, 223, 245, 1),
-              ])
+        color: const Color.fromRGBO(223, 223, 245, 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +46,7 @@ class _CategoryCardState extends State<CategoryCard> {
                         context: context,
                         builder: (BuildContext context) => EditCategoryDialog(category: widget.category));
                   },
-                  icon: const Icon(Icons.edit)
+                  icon: const Icon(Icons.edit, color: Color.fromRGBO(117, 112, 127, 1),)
               ),
               IconButton(
                   onPressed: (){
@@ -58,7 +54,14 @@ class _CategoryCardState extends State<CategoryCard> {
                         context: context,
                         builder: (BuildContext context) => DeleteCategoryDialog(category: widget.category));
                   },
-                  icon: const Icon(Icons.delete)
+                  icon: const Icon(Icons.delete, color: Color.fromRGBO(	117, 112, 127, 1),)
+              ),
+              IconButton(
+                  onPressed: (){
+                    address = address + widget.category.name.toString() + "/";
+                    BlocProvider.of<CategoryCubit>(context).getCategories(widget.category.id);
+                  },
+                  icon: const Icon(Icons.navigate_next, color: Color.fromRGBO(	117, 112, 127, 1),)
               ),
             ],
           )

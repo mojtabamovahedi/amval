@@ -1,4 +1,5 @@
 import 'package:amval/src/config/storage/constants.dart';
+import 'package:amval/src/presentation/logic/cubit/staff/edit_staff_cubit.dart';
 import 'package:camera/camera.dart';
 
 import 'package:flutter/material.dart';
@@ -108,6 +109,10 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(
           create:  (context) => CreateAssignmentCubit(repository: APIassignment()),
         ),
+        BlocProvider(
+          create:  (context) => EditStaffCubit(repository: APIStaff()),
+        ),
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -121,7 +126,7 @@ class _MyAppState extends State<MyApp> {
           colorScheme: ColorScheme.fromSwatch(
             primarySwatch: Colors.indigo,
           ).copyWith(
-            secondary: const Color.fromRGBO(206,147,216,1),
+            secondary: const Color.fromRGBO(	154, 103, 234,1),
           ),
           textTheme: PersianFonts.sahelTextTheme,
           backgroundColor: const Color.fromRGBO(95,95,196,1),

@@ -1,4 +1,5 @@
 
+import 'package:amval/src/config/storage/constants.dart';
 import 'package:amval/src/presentation/logic/cubit/category/category_cubit.dart';
 import 'package:amval/src/presentation/widget/category_card.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class Category extends StatefulWidget {
   _CategoryState createState() => _CategoryState();
 }
 
+String address = "/";
+
 class _CategoryState extends State<Category> {
 
 
@@ -24,11 +27,12 @@ class _CategoryState extends State<Category> {
     searchController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<CategoryCubit, CategoryState>(
       listener: (context, state) {
-        /// empty ?!
+        // empty
       },
       child: Scaffold(
         body: Padding(
@@ -70,7 +74,8 @@ class _CategoryState extends State<Category> {
                     children: [
                       IconButton(
                         onPressed: ()async{
-                          await context.read<CategoryCubit>().getAllList();
+                          address = "/";
+                          await context.read<CategoryCubit>().getCategories(null);
                         },
                         icon: const Icon(Icons.refresh),
                       ),IconButton(
@@ -88,16 +93,23 @@ class _CategoryState extends State<Category> {
               BlocBuilder<CategoryCubit, CategoryState>(
                 builder: (context, state) {
                   if (state is CategoryLoaded){
-                    return Text('   ریزمجموعه های یافت شده: ${state.categories.length} ');
+                    return Text('   ریزمجموعه های یافت شده: ${replaceFarsiNumber(state.categories.length.toString())} ');
                   }
                   return const Text('   زیرمجموعه های یافت شده:...');
                 },
               ),
 
+              BlocBuilder<CategoryCubit, CategoryState>(builder: (context, state){
+                if (state is CategoryLoaded){
+                  return Text("    $address");
+                }
+                return const Text("");
+              }),
               BlocBuilder<CategoryCubit,CategoryState>(
                   builder: (context, state){
                     if (state is CategoryInitial){
-                      context.read<CategoryCubit>().getAllList();
+                      address = "/";
+                      context.read<CategoryCubit>().getCategories(null);
                     }
 
                     if (state is CategoryLoading){

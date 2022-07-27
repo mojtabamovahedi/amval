@@ -32,7 +32,6 @@ class _LoginState extends State<Login> {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          saveRefreshToken(state.response.refresh.toString());
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const Dashboard()));
         }
@@ -158,11 +157,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  saveRefreshToken(String refreshToken) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("refresh", refreshToken);
-    print("this is ${prefs.getString("refresh")}");
   }
 }

@@ -10,8 +10,10 @@ import 'package:amval/src/core/screens/login.dart';
 import 'package:amval/src/core/screens/splash.dart';
 import 'package:amval/src/core/screens/staff/staff.dart';
 import 'package:amval/src/core/screens/staff/staff_add.dart';
+import 'package:amval/src/core/screens/staff/staff_edit.dart';
 import 'package:amval/src/core/screens/unit/unit.dart';
 import 'package:amval/src/data/model/instrument_response.dart';
+import 'package:amval/src/data/model/staff_response.dart';
 import 'package:flutter/material.dart';
 
 import 'storage/constants.dart';
@@ -48,6 +50,8 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (context) => InstrumentProfile(instrument: args as InstrumentResponse),);
       case '/assignment':
         return MaterialPageRoute(builder: (context) => Assignment(instrument: args as InstrumentResponse),);
+      case '/staff_edit':
+        return MaterialPageRoute(builder: (context) => StaffEdit(staff: args as StaffResponse,),);
       default:
         return _errorRoute();
     }

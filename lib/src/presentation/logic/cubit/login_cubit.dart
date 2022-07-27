@@ -4,6 +4,7 @@ import 'package:amval/src/data/repositories/login_api.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_state.dart';
 
@@ -23,6 +24,10 @@ class LoginCubit extends Cubit<LoginState> {
       // add access and refresh token to constants
       ACCESS_TOKEN = loginResponse.access.toString();
       REFRESH_TOKEN = loginResponse.refresh.toString();
+
+      // save refresh token
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("refresh", loginResponse.refresh.toString());
 
       emit(LoginSuccess(response: loginResponse));
     } catch (e) {

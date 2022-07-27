@@ -71,7 +71,16 @@ class _AddUnitDialogState extends State<AddUnitDialog> {
                 return state is CreateUnitLoading
                     ? const Center(child: CircularProgressIndicator())
                     : Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    TextButton(
+                        onPressed: (){
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          _nameController.clear();
+                          Navigator.pop(context);
+                        },
+                        child: const Text("خروج")
+                    ),
                     TextButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -82,14 +91,6 @@ class _AddUnitDialogState extends State<AddUnitDialog> {
                           }
                         },
                         child: const Text("ثبت")),
-                    TextButton(
-                        onPressed: (){
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          _nameController.clear();
-                          Navigator.pop(context);
-                        },
-                        child: const Text("خروج")
-                    )
                   ],
                 );
               },

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 // tokens
@@ -11,7 +13,7 @@ const String baseUrl = "https://amval.karbabar.ir";
 const Color? appBarColor = Color.fromRGBO(188, 188, 188, 1);
 const Color? backGroundColor = Color.fromRGBO(242,239,249, 1);
 const Color? fieldColor = Color.fromRGBO(245, 245, 246, 1);
-const Color? buttonColor = Color.fromRGBO(206, 147, 216, 1);
+const Color? buttonColor = Color.fromRGBO(50, 11, 134, 1);
 const Color? containerColor = Color.fromRGBO(102, 106, 209, 1);
 
 
